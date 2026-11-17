@@ -1,0 +1,68 @@
+# ==============================================================================
+# ~/.zshrc
+# Managed in ~/src/dotfiles (zsh package, linked with GNU Stow).
+# ==============================================================================
+
+
+# ------------------------------------------------------------------------------
+# Environment
+# ------------------------------------------------------------------------------
+export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:$PATH"
+export XDG_CONFIG_HOME="$HOME/.config"
+export GPG_TTY=$(tty)
+export BAT_THEME="Nord"
+
+
+# ------------------------------------------------------------------------------
+# Oh My Zsh
+# ------------------------------------------------------------------------------
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+
+# Too many plugins slow down shell startup.
+plugins=(
+    git
+    sudo
+    gcloud
+    kubectl
+    docker
+)
+
+source "$ZSH/oh-my-zsh.sh"
+
+
+# ------------------------------------------------------------------------------
+# Aliases
+# ------------------------------------------------------------------------------
+source "$HOME/.aliases"
+
+
+# ------------------------------------------------------------------------------
+# Prompt
+# ------------------------------------------------------------------------------
+# Starship replaces the Oh My Zsh theme prompt (config: ~/.config/starship.toml).
+command -v starship >/dev/null && eval "$(starship init zsh)"
+
+
+# ------------------------------------------------------------------------------
+# Kubernetes
+# ------------------------------------------------------------------------------
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+command -v kubectl >/dev/null && source <(kubectl completion zsh)
+# source <(flux completion zsh)
+
+
+# ------------------------------------------------------------------------------
+# Languages & runtimes
+# ------------------------------------------------------------------------------
+# Go
+export GOPATH="$HOME/go"
+export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"
+
+
+# ------------------------------------------------------------------------------
+# Tools & completions
+# ------------------------------------------------------------------------------
+command -v fzf >/dev/null && source <(fzf --zsh)
+command -v omnictl >/dev/null && source <(omnictl completion zsh)
+command -v talosctl >/dev/null && source <(talosctl completion zsh)
