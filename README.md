@@ -26,17 +26,12 @@ Each top-level folder is a Stow *package*. Files named `dot-<name>` are linked i
    ```sh
    git clone https://github.com/ryjogo/dotfiles.git ~/src/dotfiles
    ```
-3. Move any existing dotfiles out of the way (Stow won't overwrite them):
-   ```sh
-   mkdir -p ~/.dotfiles-backup
-   mv ~/.zshrc ~/.zprofile ~/.gitconfig ~/.aliases ~/.dotfiles-backup/ 2>/dev/null
-   ```
-4. Run the installer:
+3. Run the installer:
    ```sh
    ~/src/dotfiles/install.sh
    ```
-   It installs Homebrew (if missing), runs `brew bundle`, installs Oh My Zsh, and stows the `zsh`, `git`, `aliases` and `starship` packages, and points iTerm2 at `iterm2/`.
-5. Open a new terminal.
+   It installs Homebrew (if missing), trusts the Sidero Homebrew tap, runs `brew bundle`, stows the `zsh`, `git`, `aliases` and `starship` packages, installs Oh My Zsh, and points iTerm2 at `iterm2/`. Existing dotfiles are moved to `~/.dotfiles-backup/` before they are linked.
+4. Open a new terminal.
 
 ## Day to day
 

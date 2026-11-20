@@ -5,22 +5,70 @@ set -euo pipefail
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if ! command -v brew >/dev/null 2>&1; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+    if [ -x /opt/homebrew/bin/brew ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [ -x /usr/local/bin/brew ]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    else
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        if [ -x /opt/homebrew/bin/brew ]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [ -x /usr/local/bin/brew ]; then
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
+    fi
+fi
+
+if ! command -v brew >/dev/null 2>&1; then
+    echo "Homebrew was installed but is not available on PATH." >&2
+    exit 1
+fi
+
+# The Sidero formulas are in a third-party tap and require Homebrew trust.
+brew tap siderolabs/tap >/dev/null 2>&1 || true
+if brew trust --help >/dev/null 2>&1; then
+    brew trust --tap siderolabs/tap
 fi
 
 brew bundle --file="$DOTFILES/Brewfile"
 
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-fi
-
-# Stow refuses to overwrite existing files, so move them aside first.
 mkdir -p "$HOME/.config"
+
+# Stow refuses to overwrite existing files. Back up real files and directories,
+# but leave links that already point into this dotfiles repository.
+BACKUP_DIR="$HOME/.dotfiles-backup"
+mkdir -p "$BACKUP_DIR"
+backup_existing() {
+    local target="$1"
+    if [ -e "$target" ] || [ -L "$target" ]; then
+        if [ -L "$target" ]; then
+            local link_target
+            link_target="$(readlink "$target")"
+            case "$link_target" in
+                "$DOTFILES"/*|src/dotfiles/*) return ;;
+            esac
+        fi
+        mv "$target" "$BACKUP_DIR/"
+    fi
+}
+
 cd "$DOTFILES"
+for target in \
+    "$HOME/.zshrc" \
+    "$HOME/.zprofile" \
+    "$HOME/.gitconfig" \
+    "$HOME/.aliases" \
+    "$HOME/.config/starship.toml"; do
+    backup_existing "$target"
+done
+
 for pkg in zsh git aliases starship; do
     stow --dotfiles --restow -t "$HOME" "$pkg"
 done
+
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
 
 # iTerm2 loads its preferences straight from this repo.
 defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$DOTFILES/iterm2"
