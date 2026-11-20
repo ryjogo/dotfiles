@@ -30,7 +30,7 @@ Each top-level folder is a Stow *package*. Files named `dot-<name>` are linked i
    ```sh
    ~/src/dotfiles/install.sh
    ```
-   It installs Homebrew (if missing), trusts the Sidero Homebrew tap, runs `brew bundle`, stows the `zsh`, `git`, `aliases` and `starship` packages, installs Oh My Zsh, imports the iTerm2 profile from `iterm2/`, enables custom-folder syncing, and writes this Mac's mouse and keyboard repeat settings. Existing dotfiles are moved to `~/.dotfiles-backup/` before they are linked. If iTerm2 was already open, quit and reopen it after installation. Sign out and back in for the keyboard repeat settings to take effect.
+   It installs Homebrew (if missing), trusts the Sidero Homebrew tap, runs `brew bundle`, stows the `zsh`, `git`, `aliases` and `starship` packages, installs Oh My Zsh, imports the iTerm2 profile from `iterm2/`, enables custom-folder syncing, and writes this Mac's accent color, mouse and keyboard repeat settings. Existing dotfiles are moved to `~/.dotfiles-backup/` before they are linked. If iTerm2 was already open, quit and reopen it after installation. Sign out and back in for the keyboard repeat settings to take effect.
 4. Open a new terminal.
 
 ## Day to day

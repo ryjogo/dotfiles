@@ -99,7 +99,8 @@ if pgrep -x iTerm2 >/dev/null 2>&1; then
     echo "Quit and reopen iTerm2 to apply the imported profile."
 fi
 
-# Match this Mac's pointer and keyboard repeat settings.
+# Match this Mac's accent, pointer and keyboard repeat settings.
+defaults write -g AppleAccentColor -int 4
 defaults write -g com.apple.mouse.scaling -float 3
 defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 15
