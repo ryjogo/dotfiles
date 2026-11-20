@@ -70,8 +70,28 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
     RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
+# Keep iTerm2 pointed at the Nerd Font by postscript name. Family names are
+# not consistently recognized across iTerm2 releases and macOS font caches.
+ITERM_PROFILE="$DOTFILES/iterm2/com.googlecode.iterm2.plist"
+/usr/bin/python3 - "$ITERM_PROFILE" <<'PY'
+import plistlib
+import sys
+
+profile_path = sys.argv[1]
+with open(profile_path, "rb") as profile_file:
+    profile = plistlib.load(profile_file)
+
+default_profile = profile["New Bookmarks"][0]
+default_profile["Normal Font"] = "HackNFM-Regular 12"
+default_profile["Non Ascii Font"] = "HackNFM-Regular 12"
+default_profile["Use Non-ASCII Font"] = True
+
+with open(profile_path, "wb") as profile_file:
+    plistlib.dump(profile, profile_file, fmt=plistlib.FMT_BINARY)
+PY
+
 # Seed iTerm2's active preferences before enabling custom-folder syncing.
-defaults import com.googlecode.iterm2 "$DOTFILES/iterm2/com.googlecode.iterm2.plist"
+defaults import com.googlecode.iterm2 "$ITERM_PROFILE"
 defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$DOTFILES/iterm2"
 defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
 
@@ -83,3 +103,4 @@ fi
 defaults write -g com.apple.mouse.scaling -float 3
 defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 15
+echo "Keyboard repeat preferences were saved; sign out and back in for macOS to apply them."
