@@ -45,7 +45,7 @@ backup_existing() {
             local link_target
             link_target="$(readlink "$target")"
             case "$link_target" in
-                "$DOTFILES"/*|src/dotfiles/*) return ;;
+                "$DOTFILES"/*|src/dotfiles/*|../src/dotfiles/*) return ;;
             esac
         fi
         mv "$target" "$BACKUP_DIR/"
