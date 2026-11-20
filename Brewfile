@@ -38,4 +38,5 @@ brew "go"
 # Apps
 cask "visual-studio-code"
 cask "iterm2"
+cask "claude-code"
 cask "font-hack-nerd-font"
