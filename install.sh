@@ -70,6 +70,11 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
     RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
-# iTerm2 loads its preferences straight from this repo.
+# Seed iTerm2's active preferences before enabling custom-folder syncing.
+defaults import com.googlecode.iterm2 "$DOTFILES/iterm2/com.googlecode.iterm2.plist"
 defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$DOTFILES/iterm2"
 defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+
+if pgrep -x iTerm2 >/dev/null 2>&1; then
+    echo "Quit and reopen iTerm2 to apply the imported profile."
+fi
