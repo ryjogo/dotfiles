@@ -65,4 +65,4 @@ export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"
 # ------------------------------------------------------------------------------
 command -v fzf >/dev/null && source <(fzf --zsh)
 command -v omnictl >/dev/null && source <(omnictl completion zsh)
-command -v talosctl >/dev/null && source <(talosctl completion zsh)
+command -v talosctl >/dev/null && source <(talosctl completion zsh)            
