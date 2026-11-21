@@ -102,6 +102,21 @@ fi
 # Match this Mac's accent, pointer and keyboard repeat settings.
 defaults write -g AppleAccentColor -int 4
 defaults write -g com.apple.mouse.scaling -float 3
+defaults write -g com.apple.trackpad.scaling -float 1
+defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 15
+if ! defaults read com.apple.HIToolbox AppleEnabledInputSources 2>/dev/null |
+    grep -Fq '"KeyboardLayout Name" = "USInternational-PC";'; then
+    defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
+        '{ "InputSourceKind" = "Keyboard Layout"; "KeyboardLayout ID" = 15000; "KeyboardLayout Name" = "USInternational-PC"; }'
+fi
+if ! defaults read com.apple.HIToolbox AppleEnabledInputSources 2>/dev/null |
+    grep -Fq '"KeyboardLayout Name" = "British";'; then
+    defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
+        '{ "InputSourceKind" = "Keyboard Layout"; "KeyboardLayout ID" = 3; "KeyboardLayout Name" = "British"; }'
+fi
+defaults write com.apple.TextInputMenu visible -bool true
 echo "Keyboard repeat preferences were saved; sign out and back in for macOS to apply them."

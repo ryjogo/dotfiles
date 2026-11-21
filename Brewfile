@@ -14,6 +14,7 @@ brew "yq"
 
 # Networking
 brew "ipcalc"
+brew "wireguard-tools"
 
 # Editors
 brew "neovim"
@@ -40,3 +41,4 @@ cask "visual-studio-code"
 cask "iterm2"
 cask "claude-code"
 cask "font-hack-nerd-font"
+
